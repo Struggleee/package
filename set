@@ -1,0 +1,7 @@
+SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:1qaz@WSX&@'+ (os.getenv('MYSQL_HOST') if os.getenv('MYSQL_HOST') else"10.1.11.233:33306") +'/edgedb'
+
+
+if [ $MQTT_HOST ] 
+then
+  find /var/www/* | xargs -i sed -i 's/10.1.11.233:5000/'$BACKEND_HOST'/g' {}
+fi
