@@ -1,0 +1,6 @@
+ALTER TABLE `idiplus`.`model_deployment` 
+ADD COLUMN `inactive_name` VARCHAR(60) NULL DEFAULT NULL AFTER `create_time`,
+CHANGE COLUMN `subject` `subject` VARCHAR(40) NULL DEFAULT NULL ;
+
+
+
