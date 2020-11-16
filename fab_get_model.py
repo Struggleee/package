@@ -54,7 +54,7 @@ def on_message(client, userdata, message):
       if(sftp.isfile(model_path)):
         print("copy model from",model_path)
         print('LOCAL_PATH',LOCAL_PATH+subject)
-        if not sftp.isdir(LOCAL_PATH+subject):
+        if not os.path.isdir(LOCAL_PATH+subject):
           os.mkdir(LOCAL_PATH+subject)
 
         #sftp get model
