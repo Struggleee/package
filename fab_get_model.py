@@ -63,6 +63,12 @@ def on_message(client, userdata, message):
         print("Success copy")
         client.publish(MQTT_TOPIC1+'/res', json.dumps({'code':'1','msg':'success','topic':MQTT_TOPIC1}))
         sftp.close()
+        print(model_version)
+        print(LOCAL_PATH+subject+'/'+subject)
+        fp = open(LOCAL_PATH+subject+'/'+subject,'w')
+        fp.write(model_version)
+        fp.close()
+
       else:
       #exception file does not exist
         sftp.close()
