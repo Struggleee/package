@@ -8,16 +8,15 @@ import traceback
 # *********************************************************************
 # Config
 
-MQTT_SERVER = "qa.mqtt.idi-plus.com"  
-MQTT_PORT = 1883  
-MQTT_ALIVE = 60  
-MQTT_TOPIC1 = "/123/123" 
-NFS_SERVER = "13.57.162.188"
+MQTT_SERVER = "10.1.64.30"
+MQTT_PORT = 31883
+MQTT_ALIVE = 60
+MQTT_TOPIC1 = "/123/123"
+NFS_SERVER = "10.1.64.30"
 NFS_PORT = 32222
 USER = "models"
 PASSWD = "liteonmodels"
 LOCAL_PATH = "./"
-
 
 def on_connect(client, userdata, flags, rc):
     #subscribe topic
