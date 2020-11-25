@@ -1,0 +1,58 @@
+version: '3'
+services:
+#docker run -it -p 31883:1883 -p 39001:9001 -v /home/aitest/service/mosquitto/config/:/mosquitto/config -v /home/aitest/service/mosquitto/data/:/mosquitto/data -v /home/aitest/service/mosquitto/log:/mosquitto/log eclipse-mosquitto
+  mqtt:
+    image: 'eclipse-mosquitto'
+    restart: 'always'
+    environment:
+    - TZ=Asia/Taipei
+    ports:
+    - '31883:1883'
+    - '39001:9001'
+    volumes:
+    - '/home/aitest/service/mosquitto/config:/mosquitto/config'
+    - '/home/aitest/service/mosquitto/data:/mosquitto/data'
+    - '/home/aitest/service/mosquitto/log:/mosquitto/log'
+#docker run -v /home/aitest/service/sftp/users.conf:/etc/sftp/users.conf:ro -v /home/aitest/ai_share~/:/home/models/ -p 32222:22 -d sftp
+  sftp:
+    image: 'sftp'
+    restart: 'always'
+    environment:
+    - TZ=Asia/Taipei
+    ports:
+    - '32222:22'
+    volumes:
+    - '/home/aitest/ai_test/:/home/models/ai_test/'
+    - '/home/aitest/service/sftp/users.conf:/etc/sftp/users.conf:ro'
+#docker run --name runmamager-mysql -p 33306:3306 -v /home/aitest/service/mysql/data:/var/lib/mysql -v /home/aitest/service/mysql/config/my.cnf:/etc/mysql/my.cnf -e MYSQL_ROOT_PASSWORD=1qaz@WSX -d mysql:5.7 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  mysql:
+    image: 'mysql:5.7'
+    restart: 'always'
+    environment:
+    - TZ=Asia/Taipei
+    - MYSQL_ROOT_PASSWORD=1qaz@WSX
+    ports:
+    - '33306:3306'
+    volumes:
+    - '/home/aitest/service/mysql/data:/var/lib/mysql'
+    - '/home/aitest/service/mysql/config/my.cnf:/etc/mysql/my.cnf'
+#docker run -p 30080:80 -d runmamager_frt
+  run-manager-frontend:
+    image: 'runmanager_frontend'
+    restart: 'always'
+    environment:
+    - TZ=Asia/Taipei
+    - BACKEND_HOST=10.1.64.30:30081
+    ports:
+    - '30080:80'
+#docker run -p 30081:5000 -v /home/aitest/ai_test/opt:/opt -d runmamager_bak
+  run-manager-backend:
+    image: 'runmanager_backend'
+    restart: 'always'
+    environment:
+    - TZ=Asia/Taipei
+    - MYSQL_HOST=10.1.64.30:33306
+    ports:
+    - '30081:5000'
+    volumes:
+    - '/home/aitest/ai_test/opt:/opt'
