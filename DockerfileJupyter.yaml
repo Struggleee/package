@@ -1,11 +1,15 @@
-FROM nvidia/cuda:10.2-cudnn8-runtime
+FROM nvidia/cuda:10.2-cudnn7-runtime
 
 RUN apt-get update && apt-get install -y ssh vim net-tools wget curl libsm6 libxrender1 libxext-dev libzbar-dev python3-pip python3-dev gnupg2 ca-certificates software-properties-common
 RUN cd /usr/local/bin  && ln -s /usr/bin/python3 python && pip3 install --upgrade pip && pip3 install jupyter && pip3 install torch torchvision && pip3 install --user --upgrade tensorflow==1.15.0
 COPY r.txt /tmp
 RUN pip3 install -r /tmp/r.txt
-
+#python -c 'import torch; print(torch.cuda.is_available())'
+#python -c 'import tensorflow as tf; print(tf.test.is_gpu_available())'
 RUN apt-get install -y software-properties-common
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+RUN echo 'root:root' | chpasswd
 RUN echo "#!/bin/bash" > /tmp/start.sh
 RUN echo "service ssh start" >> /tmp/start.sh
 RUN echo "jupyter notebook --ip 0.0.0.0 --NotebookApp.token='' --allow-root " >> /tmp/start.sh
@@ -14,6 +18,17 @@ RUN chmod 755 /tmp/start.sh
 WORKDIR /tmp
 RUN rm -rf /var/lib/apt/lists/*
 RUN export PATH=/usr/local/cuda-10.2/bin:$PATH
+WORKDIR /usr/local/cuda/lib64
+RUN ln libcudart.so.10.2 libcudart.so.10.0
+RUN ln libcufft.so.10 libcufft.so.10.0
+RUN ln libcurand.so.10 libcurand.so.10.0
+RUN ln libcusolver.so.10 libcusolver.so.10.0
+RUN ln libcusparse.so.10 libcusparse.so.10.0
+RUN mkdir -p /usr/local/nvidia/
+RUN ln -s /usr/local/cuda/lib64 /usr/local/nvidia/lib64
+WORKDIR /usr/lib/x86_64-linux-gnu/
+RUN ln libcublas.so.10 libcublas.so.10.0
 WORKDIR /home
 CMD /tmp/start.sh
 EXPOSE 8888
+#docker build . -f DockerFile_JU -t testimage:cus
